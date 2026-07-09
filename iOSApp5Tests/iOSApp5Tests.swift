@@ -65,6 +65,17 @@ struct AnimalModelTests {
             #expect(image != nil, "Image '\(animal.assetName)' not found in Assets.xcassets")
         }
     }
+
+    // If a feedback clip is missing the quiz plays silence instead of a voice phrase.
+    // win1–win9 are played on a correct answer; try1–try6 are played on a wrong answer.
+    @Test func allFeedbackClipsExistInBundle() {
+        let winFiles = (1...9).map { "win\($0)" }
+        let tryFiles = (1...6).map { "try\($0)" }
+        for name in winFiles + tryFiles {
+            let url = Bundle.main.url(forResource: name, withExtension: "mp3")
+            #expect(url != nil, "\(name).mp3 not found in the app bundle")
+        }
+    }
 }
 
 // Tests for SoundPlayer.

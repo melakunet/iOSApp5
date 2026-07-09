@@ -5,7 +5,7 @@
 //  Created by Etefworkie Melaku on 2026-07-09.
 //
 // The Quiz tab. Plays a random animal sound and shows 3 image choices for the child to pick.
-// Correct tap triggers a spring celebration; wrong tap shakes only the tapped card.
+// Correct tap triggers a full-screen celebration and audio praise; wrong tap shakes the card and plays encouragement.
 
 import SwiftUI
 
@@ -68,12 +68,21 @@ struct QuizView: View {
     // The three cards shown to the child: the correct one plus two random others, shuffled.
     @State private var choices: [Animal] = []
 
-    // True while the "Great job!" celebration is showing after a correct answer.
+    // True while the celebration overlay is on screen after a correct answer.
     @State private var showCelebration = false
 
     // Each card has its own shake counter so wrong taps on different cards animate independently.
     // Incrementing a value triggers a new shake; SwiftUI interpolates the change via ShakeEffect.
     @State private var shakeAmounts: [UUID: CGFloat] = [:]
+
+    // Which visual award scene to show — picked at random each round so the reward looks fresh.
+    @State private var celebrationStyle: CelebrationView.Style = .flowers
+
+    // File names of the praise and encouragement audio clips (without the .mp3 extension).
+    // Place matching mp3 files in the Media/Sounds folder.
+    // A random file is picked each round so the child hears a different phrase every time.
+    private let praiseFiles    = ["win1", "win2", "win3", "win4", "win5", "win6", "win7", "win8", "win9"]
+    private let encourageFiles = ["try1", "try2", "try3", "try4", "try5", "try6"]
 
     var body: some View {
         NavigationStack {
@@ -123,26 +132,20 @@ struct QuizView: View {
                 }
                 .padding(.horizontal)
 
-                // ── Celebration ───────────────────────────────────────────────
-                // Pops in after a correct tap and disappears when the next round starts.
-                if showCelebration {
-                    VStack(spacing: 6) {
-                        Text("🎉")
-                            .font(.system(size: 72))
-                        Text("Great job!")
-                            .font(.system(size: 28, weight: .bold, design: .rounded))
-                            .foregroundStyle(.green)
-                    }
-                    .transition(.scale(scale: 0.5).combined(with: .opacity))
-                    .accessibilityLabel("Correct! Great job! Next question coming up.")
-                }
-
                 Spacer()
             }
-            // A single animation drives the celebration appearing and disappearing.
-            .animation(.spring(response: 0.4, dampingFraction: 0.6), value: showCelebration)
             .navigationTitle("Quiz")
             .navigationBarTitleDisplayMode(.large)
+        }
+        // The celebration sits outside the NavigationStack so it covers the full screen,
+        // including the navigation bar, when the child gets the answer right.
+        .overlay {
+            if showCelebration {
+                CelebrationView(style: celebrationStyle)
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+                    .accessibilityLabel("Correct! Great job! Next question coming up.")
+            }
         }
         .onAppear {
             // Start a round only the first time the tab appears.
@@ -178,9 +181,15 @@ struct QuizView: View {
         guard !showCelebration else { return }
 
         if animal.id == correctAnimal.id {
-            // Correct! Show the celebration then automatically load the next round.
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.5)) {
+            // Pick a new award scene at random so every win looks different.
+            celebrationStyle = CelebrationView.Style.allCases.randomElement()!
+            withAnimation(.easeInOut(duration: 0.25)) {
                 showCelebration = true
+            }
+            // Small delay so the praise voice starts after the animal sound fades out
+            // rather than colliding with it at the exact moment the child taps.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                soundPlayer.playFeedback(praiseFiles.randomElement()!)
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {
                 startRound()
@@ -190,6 +199,11 @@ struct QuizView: View {
             // Incrementing by 1 triggers one full shake cycle through ShakeEffect.
             withAnimation(.linear(duration: 0.5)) {
                 shakeAmounts[animal.id, default: 0] += 1
+            }
+            // Small delay so the encouragement voice starts after the shake begins,
+            // giving the animation a beat to register before the audio kicks in.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                soundPlayer.playFeedback(encourageFiles.randomElement()!)
             }
         }
     }

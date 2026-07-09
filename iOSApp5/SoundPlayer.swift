@@ -22,6 +22,10 @@ class SoundPlayer: NSObject, AVAudioPlayerDelegate {
     // A local variable inside play() would be released as soon as the function returns.
     private var player: AVAudioPlayer?
 
+    // A separate player for praise and encouragement phrases so they can overlap with
+    // (or start immediately after) an animal sound without sharing the same AVAudioPlayer.
+    private var feedbackPlayer: AVAudioPlayer?
+
     // The assetName of whichever animal sound is currently playing, or nil when nothing is playing.
     // Views watch this to drive the bounce animation on the active card.
     var currentlyPlaying: String?
@@ -67,5 +71,22 @@ class SoundPlayer: NSObject, AVAudioPlayerDelegate {
     // We clear currentlyPlaying here so the card's bounce animation returns to its normal size.
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         currentlyPlaying = nil
+    }
+
+    // Plays a short praise or encouragement phrase without changing currentlyPlaying,
+    // so the card bounce animation is unaffected and the two players stay independent.
+    func playFeedback(_ filename: String) {
+        guard let url = Bundle.main.url(forResource: filename, withExtension: "mp3") else {
+            print("SoundPlayer: could not find \(filename).mp3 in the app bundle")
+            return
+        }
+        // Stop any previous feedback phrase so rapid taps don't stack on top of each other.
+        feedbackPlayer?.stop()
+        do {
+            feedbackPlayer = try AVAudioPlayer(contentsOf: url)
+            feedbackPlayer?.play()
+        } catch {
+            print("SoundPlayer: failed to play feedback \(filename).mp3 – \(error)")
+        }
     }
 }
