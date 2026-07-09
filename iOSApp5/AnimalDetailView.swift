@@ -58,6 +58,7 @@ struct AnimalDetailView: View {
                         .aspectRatio(16 / 9, contentMode: .fit)
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                         .padding(.horizontal)
+                        .accessibilityLabel("\(animal.name) video")
                 } else {
                     // Friendly stand-in when the video file hasn't landed in the bundle yet.
                     RoundedRectangle(cornerRadius: 16)
@@ -74,6 +75,7 @@ struct AnimalDetailView: View {
                             }
                         }
                         .padding(.horizontal)
+                        .accessibilityLabel("Video for \(animal.name) is not yet available")
                 }
 
                 // ── "Hear me!" button ─────────────────────────────────────────
@@ -91,6 +93,7 @@ struct AnimalDetailView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
                 .padding(.horizontal)
+                .accessibilityLabel("Hear the \(animal.name.lowercased()) sound again")
             }
             .padding(.vertical)
         }

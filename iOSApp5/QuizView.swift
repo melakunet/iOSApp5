@@ -94,6 +94,7 @@ struct QuizView: View {
                             .background(correctAnimal.cardColor.opacity(0.15))
                             .clipShape(Circle())
                     }
+                    .accessibilityLabel("Play the animal sound again")
                 }
                 .padding(.top, 8)
 
@@ -110,6 +111,12 @@ struct QuizView: View {
                             .onTapGesture {
                                 handleTap(animal)
                             }
+                            // Merge the image and name label into one accessible button so
+                            // VoiceOver announces the animal name and the tap action together.
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel(animal.name)
+                            .accessibilityHint("Tap to choose \(animal.name.lowercased())")
+                            .accessibilityAddTraits(.isButton)
                     }
                 }
                 .padding(.horizontal)
@@ -125,6 +132,7 @@ struct QuizView: View {
                             .foregroundStyle(.green)
                     }
                     .transition(.scale(scale: 0.5).combined(with: .opacity))
+                    .accessibilityLabel("Correct! Great job! Next question coming up.")
                 }
 
                 Spacer()

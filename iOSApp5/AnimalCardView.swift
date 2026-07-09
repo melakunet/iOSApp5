@@ -51,6 +51,11 @@ struct AnimalCardView: View {
             .onTapGesture {
                 soundPlayer.play(animal.assetName)
             }
+            // Merge the image and name into one accessibility element so VoiceOver
+            // reads them as a single button rather than two separate items.
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("\(animal.name). Tap to hear the \(animal.name.lowercased()) sound.")
+            .accessibilityAddTraits(.isButton)
 
             // ── Navigation row ──────────────────────────────────────────────
             // A clearly labelled button so a child (or parent) knows more detail exists.
@@ -68,6 +73,9 @@ struct AnimalCardView: View {
             }
             // Plain style removes the default blue tint that NavigationLink adds.
             .buttonStyle(.plain)
+            // Override the default label (which includes the chevron icon name) with
+            // something a screen reader can speak clearly.
+            .accessibilityLabel("See more about \(animal.name)")
         }
         .background(animal.cardColor)
         .clipShape(RoundedRectangle(cornerRadius: 20))
