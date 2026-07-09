@@ -95,6 +95,9 @@ struct AnimalDetailView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 16))
                 }
                 .padding(.horizontal)
+                // accessibilityIdentifier gives the UI tests a stable way to find this button
+                // that doesn't break when the accessibilityLabel text changes.
+                .accessibilityIdentifier("hearMeButton")
                 .accessibilityLabel("Hear the \(animal.name.lowercased()) sound again")
             }
             .padding(.vertical)

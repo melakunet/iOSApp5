@@ -84,8 +84,10 @@ final class iOSApp5UITests: XCTestCase {
         )
 
         // The "Hear me!" button must be present so the child can replay the sound.
+        // We find it by accessibility identifier because its accessibilityLabel is a sentence
+        // ("Hear the dog sound again") that doesn't match the visible title "Hear me!".
         XCTAssertTrue(
-            app.buttons["Hear me!"].waitForExistence(timeout: 3),
+            app.buttons["hearMeButton"].waitForExistence(timeout: 3),
             "'Hear me!' button not found on the detail screen"
         )
     }
@@ -99,7 +101,8 @@ final class iOSApp5UITests: XCTestCase {
         XCTAssertTrue(seeMore.waitForExistence(timeout: 5))
         seeMore.tap()
 
-        let hearMe = app.buttons["Hear me!"]
+        // Use the accessibility identifier for the same reason as testDetailScreenShowsCorrectContent.
+        let hearMe = app.buttons["hearMeButton"]
         XCTAssertTrue(hearMe.waitForExistence(timeout: 5), "'Hear me!' button not found")
         hearMe.tap()
 
