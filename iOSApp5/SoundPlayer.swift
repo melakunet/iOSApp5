@@ -4,6 +4,8 @@
 //
 //  Created by Etefworkie Melaku on 2026-07-08.
 //
+// Audio controller. Wraps AVAudioPlayer so any view can play an animal sound with one call.
+// Lives as a shared @Observable object injected through the SwiftUI environment.
 
 import AVFoundation
 import Observation
@@ -54,6 +56,7 @@ class SoundPlayer: NSObject, AVAudioPlayerDelegate {
             // so we can clear currentlyPlaying and reset the card animation.
             player?.delegate = self
             player?.play()
+            // Set currentlyPlaying after play() so observers see the name as soon as audio starts.
             currentlyPlaying = assetName
         } catch {
             print("SoundPlayer: failed to create player for \(assetName).mp3 – \(error)")

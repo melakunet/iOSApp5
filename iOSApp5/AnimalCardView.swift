@@ -4,6 +4,8 @@
 //
 //  Created by Etefworkie Melaku on 2026-07-09.
 //
+// One card in the home-screen grid. Tapping the image area plays the animal's sound;
+// the "See more" button at the bottom pushes AnimalDetailView onto the navigation stack.
 
 import SwiftUI
 

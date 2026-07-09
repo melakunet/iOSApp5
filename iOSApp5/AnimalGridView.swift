@@ -4,6 +4,8 @@
 //
 //  Created by Etefworkie Melaku on 2026-07-09.
 //
+// The Animals tab. Shows all 8 animal cards in a 2-column scrollable grid.
+// Owns the NavigationStack so cards can push the detail screen without the TabView getting involved.
 
 import SwiftUI
 
@@ -46,7 +48,7 @@ struct AnimalGridView: View {
             .navigationTitle("Animal Friends")
             .navigationBarTitleDisplayMode(.large)
             .onAppear {
-                // offset and opacity both start at their hidden values so the first
+                // opacity and offset both start at their hidden values so the first
                 // render is invisible; setting appeared = true fires all the animations.
                 appeared = true
             }

@@ -4,6 +4,8 @@
 //
 //  Created by Etefworkie Melaku on 2026-07-09.
 //
+// Detail screen shown when the user taps "See more" on a grid card.
+// Shows a fun fact, a video player for the animal's mp4, and a button to replay its sound.
 
 import SwiftUI
 import AVKit

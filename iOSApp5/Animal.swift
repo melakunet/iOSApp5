@@ -4,6 +4,8 @@
 //
 //  Created by Etefworkie Melaku on 2026-07-08.
 //
+// Data model. Defines the Animal struct and the static list of all 8 animals.
+// Every view in the app reads from Animal.all — it is the single source of truth for all animal data.
 
 import SwiftUI
 

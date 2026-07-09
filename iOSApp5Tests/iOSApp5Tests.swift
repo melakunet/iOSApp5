@@ -4,6 +4,8 @@
 //
 //  Created by Etefworkie Melaku on 2026-07-08.
 //
+// Unit tests for the Animal model and SoundPlayer class.
+// Checks that all 8 animals have the correct data and that their media files are in the bundle.
 
 import Testing
 import UIKit

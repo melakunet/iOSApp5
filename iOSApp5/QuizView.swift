@@ -4,6 +4,8 @@
 //
 //  Created by Etefworkie Melaku on 2026-07-09.
 //
+// The Quiz tab. Plays a random animal sound and shows 3 image choices for the child to pick.
+// Correct tap triggers a spring celebration; wrong tap shakes only the tapped card.
 
 import SwiftUI
 
@@ -23,7 +25,7 @@ struct ShakeEffect: GeometryEffect {
     }
 }
 
-// A single tappable answer card for the quiz.
+// A single answer card for the quiz — just the visual, no tap logic.
 // The parent QuizView adds the tap handler and animation modifiers so all
 // game logic stays in one place.
 struct QuizChoiceCard: View {
@@ -155,11 +157,13 @@ struct QuizView: View {
     // shuffle all three, and play the sound so the child hears it straight away.
     private func startRound() {
         let correct = Animal.all.randomElement()!
+        // Filter out the correct animal so the wrong choices are always different from the answer.
         let wrongs = Animal.all.filter { $0.id != correct.id }.shuffled().prefix(2)
 
         correctAnimal = correct
         choices = ([correct] + wrongs).shuffled()
         showCelebration = false
+        // Reset all shake counters so the new round's cards start still.
         shakeAmounts = [:]
 
         // Small delay so the view finishes laying out before the sound starts.
@@ -183,6 +187,7 @@ struct QuizView: View {
             }
         } else {
             // Wrong — shake just this card so the child knows to try a different one.
+            // Incrementing by 1 triggers one full shake cycle through ShakeEffect.
             withAnimation(.linear(duration: 0.5)) {
                 shakeAmounts[animal.id, default: 0] += 1
             }

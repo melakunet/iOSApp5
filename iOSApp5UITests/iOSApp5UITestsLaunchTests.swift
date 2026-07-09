@@ -4,6 +4,8 @@
 //
 //  Created by Etefworkie Melaku on 2026-07-08.
 //
+// Launch test. Verifies the app starts successfully and takes a screenshot of the launch screen.
+// runsForEachTargetApplicationUIConfiguration means it tests in both light and dark mode.
 
 import XCTest
 

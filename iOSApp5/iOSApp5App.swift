@@ -4,6 +4,7 @@
 //
 //  Created by Etefworkie Melaku on 2026-07-08.
 //
+// App entry point. Creates the shared SoundPlayer and sets up the two-tab TabView.
 
 import SwiftUI
 

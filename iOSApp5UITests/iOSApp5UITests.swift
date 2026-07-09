@@ -4,6 +4,8 @@
 //
 //  Created by Etefworkie Melaku on 2026-07-08.
 //
+// UI tests for the Animal Friends app.
+// Checks that all 8 animal cards appear, navigation works, and buttons respond without crashing.
 
 import XCTest
 
@@ -42,7 +44,7 @@ final class iOSApp5UITests: XCTestCase {
         }
     }
 
-    // Tapping a card's name/image area should trigger the sound without crashing the app
+    // Tapping the card's name/image area should trigger the sound without crashing the app
     // or navigating away from the grid.
     @MainActor
     func testTappingCardDoesNotCrash() throws {
