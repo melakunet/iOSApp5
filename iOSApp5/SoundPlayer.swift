@@ -10,19 +10,22 @@ import Observation
 
 // SoundPlayer is a class (not a struct) because AVAudioPlayer is a reference type and we need
 // to keep the same player alive while audio is playing — if it gets deallocated, the sound stops.
+// We inherit from NSObject so we can conform to AVAudioPlayerDelegate, which tells us when a
+// sound finishes so we can reset currentlyPlaying and end the card's bounce animation.
 // @Observable lets SwiftUI views react when currentlyPlaying changes without any extra boilerplate.
 @Observable
-class SoundPlayer {
+class SoundPlayer: NSObject, AVAudioPlayerDelegate {
 
     // We keep the player as a property so it stays in memory for the full duration of playback.
     // A local variable inside play() would be released as soon as the function returns.
     private var player: AVAudioPlayer?
 
     // The assetName of whichever animal sound is currently playing, or nil when nothing is playing.
-    // Views can watch this to highlight the active card.
+    // Views watch this to drive the bounce animation on the active card.
     var currentlyPlaying: String?
 
-    init() {
+    override init() {
+        super.init()
         // Set the audio session once at startup so the app plays sound even when the device
         // is in silent / vibrate mode — important for a kids app where parents often mute the ring.
         do {
@@ -47,10 +50,19 @@ class SoundPlayer {
 
         do {
             player = try AVAudioPlayer(contentsOf: url)
+            // Setting the delegate lets us get notified when playback ends naturally,
+            // so we can clear currentlyPlaying and reset the card animation.
+            player?.delegate = self
             player?.play()
             currentlyPlaying = assetName
         } catch {
             print("SoundPlayer: failed to create player for \(assetName).mp3 – \(error)")
         }
+    }
+
+    // Called automatically by AVFoundation when the sound finishes playing.
+    // We clear currentlyPlaying here so the card's bounce animation returns to its normal size.
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        currentlyPlaying = nil
     }
 }
