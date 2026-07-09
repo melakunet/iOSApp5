@@ -10,14 +10,25 @@ import SwiftUI
 @main
 struct iOSApp5App: App {
     // One SoundPlayer lives for the entire app lifetime.
-    // @State here tells SwiftUI to keep this instance alive across re-renders of the App struct.
-    // We inject it with .environment() so any view in the tree can read it without prop drilling.
+    // @State keeps it alive across re-renders; .environment() shares it with every view in the tree.
     @State private var soundPlayer = SoundPlayer()
 
     var body: some Scene {
         WindowGroup {
-            AnimalGridView()
-                .environment(soundPlayer)
+            // TabView gives the app two tabs — the animal grid and the quiz.
+            // Both tabs share the same SoundPlayer so sounds never overlap between tabs.
+            TabView {
+                AnimalGridView()
+                    .tabItem {
+                        Label("Animals", systemImage: "pawprint.fill")
+                    }
+
+                QuizView()
+                    .tabItem {
+                        Label("Quiz", systemImage: "questionmark.circle.fill")
+                    }
+            }
+            .environment(soundPlayer)
         }
     }
 }
