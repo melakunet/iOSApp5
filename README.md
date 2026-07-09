@@ -33,4 +33,4 @@ No third-party packages are used — the app depends only on Apple frameworks (S
 
 ## Media credits
 
-All animal sound effects and video clips are royalty-free files sourced from [Pixabay](https://pixabay.com) and [Mixkit](https://mixkit.co). Animal images are original artwork created for this project.
+Animal images were generated with ChatGPT. Video clips were generated with [Kling AI](https://kling.ai). Animal sound effects are royalty-free files sourced from [Pixabay](https://pixabay.com) and [Mixkit](https://mixkit.co).
